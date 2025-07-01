@@ -1,19 +1,23 @@
 import { reactive } from 'vue';
 
 const store = reactive({
-  username: localStorage.getItem('username'),
-  server_domain: "http://localhost:3000",
+  username: localStorage.getItem('username') || null,
+  token: localStorage.getItem('token') || null,
 
-  login(username) {
+  login(username, token = null) {
     localStorage.setItem('username', username);
+    if (token) localStorage.setItem('token', token);
     this.username = username;
-    console.log("login", this.username);
+    if (token) this.token = token;
   },
-
   logout() {
-    console.log("logout");
     localStorage.removeItem('username');
-    this.username = undefined;
+    localStorage.removeItem('token');
+    this.username = null;
+    this.token = null;
+  },
+  get isLoggedIn() {
+    return !!this.username || !!this.token;
   }
 });
 

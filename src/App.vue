@@ -1,46 +1,31 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link :to="{ name: 'main' }">Vue Recipes</router-link> |
-      <router-link :to="{ name: 'search' }">Search</router-link> |
-      <span v-if="!store.username">
-        Guest:
-        <router-link :to="{ name: 'register' }">Register</router-link> |
-        <router-link :to="{ name: 'login' }">Login</router-link> |
-      </span>
-      <span v-else>
-        {{ store.username }}:
-        <button @click="logout" class="btn btn-link p-0">Logout</button> |
-      </span>
-    </div>
+    <Navbar @open-create-recipe="openCreateRecipeModal" />
     <router-view />
+    <CreateRecipeModal ref="createRecipeModal" />
   </div>
 </template>
 
 <script>
-import { getCurrentInstance } from 'vue';
+import Navbar from './components/Navbar.vue'
+import CreateRecipeModal from './components/CreateRecipeModal.vue'
 
 export default {
   name: "App",
-  setup() {
-    const internalInstance = getCurrentInstance();
-    const store = internalInstance.appContext.config.globalProperties.store;
-    const toast = internalInstance.appContext.config.globalProperties.toast;
-    const router = internalInstance.appContext.config.globalProperties.$router;
+  components: { Navbar, CreateRecipeModal },
+  methods: {
+    openCreateRecipeModal() {
+      this.$refs.createRecipeModal.open();
+    }
 
-    const logout = () => {
-      store.logout();
-      toast("Logout", "User logged out successfully", "success");
-      router.push("/").catch(() => {});
-    };
 
-    return { store, logout };
+
   }
 }
 </script>
 
 <style lang="scss">
-@import "@/scss/form-style.scss";
+@use "@/scss/form-style.scss" as *;
 
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
