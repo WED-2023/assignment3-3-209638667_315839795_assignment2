@@ -214,24 +214,31 @@ export default {
 .family-recipes-container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 2rem;
-    min-height: 100vh;
+    padding: 2rem 0;
+    /* Match MyFavorites padding style */
     background: linear-gradient(to bottom, #faf8f3, #ffffff);
 }
 
 /* Header Section */
 .header-section {
     text-align: center;
-    margin-bottom: 3rem;
-    padding: 2rem 0;
-    border-bottom: 3px double #d4a574;
+    margin-bottom: 2rem;
+    /* Back to 2rem like MyFavorites */
+    padding: 0;
+    /* Remove padding completely */
+    border-bottom: none;
+    /* Remove the border that MyFavorites doesn't have */
 }
 
 .page-title {
+    color: #A47551;
+    /* Match MyFavorites color */
+    font-weight: bold;
+    margin-bottom: 2rem;
     font-family: 'Georgia', serif;
-    font-size: 2.5rem;
-    color: #5c4033;
-    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    /* Add text shadow like MyFavorites */
+    font-size: 2rem;
     position: relative;
 }
 
@@ -281,7 +288,8 @@ export default {
 .recipes-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-    gap: 2rem;
+    gap: 1.5rem;
+    /* Remove margin-bottom completely - no bottom margin like MyFavorites */
 }
 
 /* Recipe Card */
@@ -294,7 +302,8 @@ export default {
     border: 1px solid #e8dfd6;
     display: flex;
     flex-direction: column;
-    height: 100%;
+    min-height: 600px;
+    max-height: 650px;
 }
 
 .recipe-card:hover {
@@ -305,10 +314,11 @@ export default {
 /* Recipe Image */
 .recipe-image-container {
     position: relative;
-    height: 250px;
+    height: 200px;
     cursor: pointer;
     overflow: hidden;
     background: #faf8f3;
+    flex-shrink: 0;
 }
 
 .recipe-image {
@@ -360,31 +370,34 @@ export default {
 
 /* Recipe Content */
 .recipe-content {
-    padding: 1.5rem;
+    padding: 1.25rem;
     display: flex;
     flex-direction: column;
     flex-grow: 1;
+    min-height: 0;
 }
 
 .recipe-title {
     font-family: 'Georgia', serif;
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     color: #5c4033;
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
+    line-height: 1.3;
 }
 
 .family-info {
     background: #faf8f3;
-    padding: 1rem;
+    padding: 0.75rem;
     border-radius: 8px;
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
     border-left: 4px solid #d4a574;
 }
 
 .who-made,
 .when-made {
-    margin: 0.5rem 0;
+    margin: 0.25rem 0;
     color: #6b5d54;
+    font-size: 0.9rem;
 }
 
 .label {
@@ -399,8 +412,9 @@ export default {
 .recipe-meta {
     display: flex;
     gap: 1rem;
-    margin: 1rem 0;
+    margin: 0.75rem 0;
     color: #8b7355;
+    font-size: 0.9rem;
 }
 
 .meta-item {
@@ -413,15 +427,14 @@ export default {
 .dietary-badges {
     display: flex;
     gap: 0.5rem;
-    margin: 1rem 0;
-    flex-grow: 1;
-    align-items: flex-end;
+    margin: 0.75rem 0;
+    flex-wrap: wrap;
 }
 
 .badge {
-    padding: 0.25rem 0.75rem;
+    padding: 0.2rem 0.6rem;
     border-radius: 20px;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     font-weight: 600;
 }
 
@@ -448,11 +461,12 @@ export default {
     color: white;
     border: none;
     border-radius: 8px;
-    font-size: 1rem;
+    font-size: 0.95rem;
     font-weight: 600;
     cursor: pointer;
     transition: background 0.3s;
     margin-top: auto;
+    flex-shrink: 0;
 }
 
 .view-recipe-btn:hover {
@@ -619,20 +633,37 @@ export default {
 
 /* Responsive Design */
 @media (max-width: 768px) {
+    .family-recipes-container {
+        padding: 1rem;
+    }
+
     .recipes-grid {
         grid-template-columns: 1fr;
+        gap: 1rem;
     }
 
-    .recipe-details {
-        grid-template-columns: 1fr;
+    .recipe-card {
+        min-height: 550px;
+        max-height: 600px;
     }
 
-    .modal-content {
-        margin: 1rem;
+    .recipe-image-container {
+        height: 180px;
     }
 
     .page-title {
-        font-size: 2rem;
+        font-size: 1.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .page-title {
+        font-size: 1.6rem;
+    }
+
+    .recipe-card {
+        min-height: 500px;
+        max-height: 550px;
     }
 }
 </style>

@@ -112,6 +112,7 @@ export default {
   background-color: #A47551 !important;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 0.75rem 0;
+  min-height: 60px;
 }
 
 /* Brand styling */
@@ -121,6 +122,7 @@ export default {
   color: white !important;
   display: flex;
   align-items: center;
+  font-family: 'Georgia', serif;
 }
 
 .brand:hover {
@@ -128,24 +130,33 @@ export default {
   text-decoration: none;
 }
 
-/* Navigation items */
+/* Navigation items - FORCE WHITE COLOR */
+.navbar-nav .nav-link,
+.navbar-nav .nav-item .nav-link,
+.navbar-nav .nav-item a,
+.recipe-navbar .navbar-nav .nav-link,
+.recipe-navbar .navbar-dark .navbar-nav .nav-link,
 .navbar-dark .navbar-nav .nav-link {
-  color: rgba(255, 255, 255, 0.95) !important;
+  color: white !important;
   font-weight: 500;
   padding: 0.5rem 1rem;
   margin: 0 0.25rem;
   border-radius: 4px;
   transition: all 0.3s ease;
+  font-family: 'Georgia', serif;
+  text-decoration: none !important;
 }
 
-.navbar-dark .navbar-nav .nav-link:hover {
+.navbar-dark .navbar-nav .nav-link:hover,
+.navbar-nav .nav-link:hover {
   color: white !important;
-  background-color: rgba(255, 255, 255, 0.15);
+  background-color: rgba(255, 255, 255, 0.15) !important;
 }
 
-.navbar-dark .navbar-nav .nav-link.router-link-exact-active {
+.navbar-dark .navbar-nav .nav-link.router-link-exact-active,
+.navbar-nav .nav-link.router-link-exact-active {
   color: white !important;
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(255, 255, 255, 0.2) !important;
 }
 
 /* Text styling */
@@ -153,6 +164,8 @@ export default {
 .welcome-text {
   color: rgba(255, 255, 255, 0.9);
   font-size: 0.95rem;
+  margin-right: 1.5rem !important;
+  font-family: 'Georgia', serif;
 }
 
 .welcome-text strong {
@@ -243,10 +256,37 @@ export default {
   color: white;
 }
 
+/* Layout fixes - FORCE PROPER ALIGNMENT */
+.d-flex.w-100.justify-content-between {
+  align-items: center !important;
+  min-height: 40px !important;
+}
+
+/* Force left nav to align properly */
+.navbar-nav {
+  display: flex !important;
+  align-items: center !important;
+  margin: 0 !important;
+}
+
+.navbar-nav:first-child {
+  margin-right: auto !important;
+}
+
+.navbar-nav:first-child .nav-link {
+  color: white !important;
+}
+
 /* Responsive design */
 @media (max-width: 991px) {
   .navbar-nav {
     padding: 1rem 0;
+    width: 100%;
+  }
+
+  .d-flex.w-100 {
+    flex-direction: column !important;
+    align-items: stretch !important;
   }
 
   .action-btn {
@@ -259,6 +299,12 @@ export default {
     padding: 0.5rem 1rem;
     display: block;
     text-align: center;
+    color: white !important;
+  }
+
+  /* Force all nav links to be white on mobile */
+  .recipe-navbar .navbar-nav .nav-link {
+    color: white !important;
   }
 
   ::v-deep .dropdown-menu {
