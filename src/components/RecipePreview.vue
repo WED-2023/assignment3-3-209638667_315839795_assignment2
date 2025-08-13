@@ -1,8 +1,24 @@
 <template>
   <router-link :to="`/recipe/${recipeId}`" class="recipe-card-link">
     <b-card class="recipe-card h-100" no-body>
-      <b-card-img :src="recipe.image || 'https://via.placeholder.com/300x200?text=No+Image'" :alt="recipe.title"
-        class="recipe-image" top />
+      <!-- Updated image section with same logic as FamilyRecipes -->
+      <div class="recipe-image-container">
+        <img
+          v-if="
+            recipe.image &&
+            recipe.image !==
+              'https://via.placeholder.com/300x200?text=No+Image' &&
+            !isImageMissing
+          "
+          :src="recipe.image"
+          :alt="recipe.title"
+          class="recipe-image"
+          @error="handleImageError"
+        />
+        <div v-else class="no-image-placeholder">
+          <span>🍽️</span>
+        </div>
+      </div>
 
       <b-card-body>
         <b-card-title class="recipe-title">
@@ -11,25 +27,23 @@
 
         <div class="recipe-info">
           <div class="info-item">
-            <b-icon icon="clock" class="mr-1"></b-icon>
+            <span class="info-icon">⏱️</span>
             {{ displayTime }} min
           </div>
           <div class="info-item">
-            <b-icon icon="heart" class="mr-1"></b-icon>
+            <span class="info-icon">❤️</span>
             {{ displayLikes }}
           </div>
         </div>
 
         <div class="recipe-badges mt-2">
-          <b-badge v-if="isVegan" variant="success" class="mr-1">
+          <b-badge v-if="isVegan" variant="success" class="me-1">
             Vegan
           </b-badge>
-          <b-badge v-if="isVegetarian" variant="info" class="mr-1">
+          <b-badge v-if="isVegetarian" variant="info" class="me-1">
             Vegetarian
           </b-badge>
-          <b-badge v-if="isGlutenFree" variant="warning">
-            Gluten Free
-          </b-badge>
+          <b-badge v-if="isGlutenFree" variant="warning"> Gluten Free </b-badge>
         </div>
       </b-card-body>
     </b-card>
@@ -42,42 +56,58 @@ export default {
   props: {
     recipe: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
+  },
+  data() {
+    return {
+      isImageMissing: false,
+    };
   },
   computed: {
     recipeId() {
       return this.recipe.id || this.recipe.recipe_id;
     },
     displayTime() {
-      return this.recipe.readyInMinutes ||
+      return (
+        this.recipe.readyInMinutes ||
         this.recipe.cook_time ||
         this.recipe.cookTime ||
-        0;
+        0
+      );
     },
     displayLikes() {
-      return this.recipe.aggregateLikes ||
+      return (
+        this.recipe.aggregateLikes ||
         this.recipe.likes ||
         this.recipe.popularity ||
-        0;
+        0
+      );
     },
     isVegan() {
-      return this.recipe.vegan ||
-        this.recipe.is_vegan ||
-        this.recipe.isVegan;
+      return this.recipe.vegan || this.recipe.is_vegan || this.recipe.isVegan;
     },
     isVegetarian() {
-      return this.recipe.vegetarian ||
+      return (
+        this.recipe.vegetarian ||
         this.recipe.is_vegetarian ||
-        this.recipe.isVegetarian;
+        this.recipe.isVegetarian
+      );
     },
     isGlutenFree() {
-      return this.recipe.glutenFree ||
+      return (
+        this.recipe.glutenFree ||
         this.recipe.is_gluten_free ||
-        this.recipe.isGlutenFree;
-    }
-  }
-}
+        this.recipe.isGlutenFree
+      );
+    },
+  },
+  methods: {
+    handleImageError() {
+      this.isImageMissing = true;
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -96,12 +126,33 @@ export default {
 .recipe-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 5px 20px rgba(164, 117, 81, 0.3);
-  border-color: #A47551;
+  border-color: #a47551;
+}
+
+/* Updated image container styles to match FamilyRecipes */
+.recipe-image-container {
+  height: 200px;
+  overflow: hidden;
+  background: #faf8f3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .recipe-image {
-  height: 200px;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
+}
+
+.no-image-placeholder {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f5e6d3 0%, #e8dfd6 100%);
+  font-size: 4rem;
 }
 
 .recipe-title {
@@ -132,6 +183,11 @@ export default {
   align-items: center;
   color: #666;
   font-size: 0.9rem;
+}
+
+.info-icon {
+  margin-right: 0.25rem;
+  font-size: 1rem;
 }
 
 .recipe-badges {

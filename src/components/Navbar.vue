@@ -12,7 +12,9 @@
 
       <!-- Collapsible Navigation -->
       <b-collapse id="nav-collapse" is-nav>
-        <div class="d-flex w-100 justify-content-between align-items-center flex-wrap">
+        <div
+          class="d-flex w-100 justify-content-between align-items-center flex-wrap"
+        >
           <!-- Left Side Navigation -->
           <b-navbar-nav>
             <b-nav-item to="/" tag="router-link" exact>Recipes</b-nav-item>
@@ -25,41 +27,70 @@
             <template v-if="!isLoggedIn">
               <b-navbar-text class="mr-3 guest-text">Hello Guest</b-navbar-text>
               <b-nav-item>
-                <b-button variant="outline-light" size="sm" @click="$router.push('/login')"
-                  class="action-btn">Login</b-button>
+                <b-button
+                  variant="outline-light"
+                  size="sm"
+                  @click="$router.push('/login')"
+                  class="action-btn"
+                  >Login</b-button
+                >
               </b-nav-item>
               <b-nav-item>
-                <b-button variant="light" size="sm" @click="$router.push('/register')"
-                  class="action-btn register-btn">Register</b-button>
+                <b-button
+                  variant="light"
+                  size="sm"
+                  @click="$router.push('/register')"
+                  class="action-btn register-btn"
+                  >Register</b-button
+                >
               </b-nav-item>
             </template>
 
             <template v-else>
-              <b-navbar-text class="mr-3 welcome-text">Welcome, <strong>{{ username }}</strong>!</b-navbar-text>
+              <b-navbar-text class="mr-3 welcome-text"
+                >Welcome, <strong>{{ username }}</strong
+                >!</b-navbar-text
+              >
 
               <!-- Personal Area Dropdown -->
-              <b-nav-item-dropdown text="Personal Area">
+              <b-nav-item-dropdown
+                text="Personal Area"
+                class="personal-dropdown"
+              >
                 <b-dropdown-item to="/favorites" tag="router-link">
-                  <b-icon icon="heart-fill" class="mr-2 text-danger"></b-icon> My Favorites
+                  <b-icon icon="heart-fill" class="mr-2 text-danger"></b-icon>
+                  My Favorites
                 </b-dropdown-item>
                 <b-dropdown-item to="/my-recipes" tag="router-link">
-                  <b-icon icon="book" class="mr-2 text-primary"></b-icon> My Recipes
+                  <b-icon icon="book" class="mr-2 text-primary"></b-icon> My
+                  Recipes
                 </b-dropdown-item>
                 <b-dropdown-item to="/family-recipes" tag="router-link">
-                  <b-icon icon="people-fill" class="mr-2 text-success"></b-icon> Family Recipes
+                  <b-icon icon="people-fill" class="mr-2 text-success"></b-icon>
+                  Family Recipes
                 </b-dropdown-item>
               </b-nav-item-dropdown>
 
               <!-- New Recipe Button -->
               <b-nav-item>
-                <b-button variant="success" size="sm" @click="onAddRecipe" class="action-btn new-recipe-btn">
+                <b-button
+                  variant="success"
+                  size="sm"
+                  @click="onAddRecipe"
+                  class="action-btn new-recipe-btn"
+                >
                   <b-icon icon="plus-circle" class="mr-1"></b-icon> New Recipe
                 </b-button>
               </b-nav-item>
 
               <!-- Logout Button -->
               <b-nav-item>
-                <b-button variant="outline-light" size="sm" @click="logout" class="action-btn logout-btn">
+                <b-button
+                  variant="outline-light"
+                  size="sm"
+                  @click="logout"
+                  class="action-btn logout-btn"
+                >
                   <b-icon icon="box-arrow-right" class="mr-1"></b-icon> Logout
                 </b-button>
               </b-nav-item>
@@ -67,14 +98,13 @@
           </b-navbar-nav>
         </div>
       </b-collapse>
-
     </b-container>
   </b-navbar>
 </template>
 
 <script>
-import store from '../store';
-import axios from 'axios';
+import store from "../store";
+import axios from "axios";
 
 export default {
   name: "AppNavbar",
@@ -83,89 +113,93 @@ export default {
       return store.isLoggedIn;
     },
     username() {
-      return store.username || 'User';
-    }
+      return store.username || "User";
+    },
   },
   methods: {
     logout() {
-      axios.post('/logout')
+      axios
+        .post("/logout")
         .then(() => {
-          console.log('Logged out successfully');
+          console.log("Logged out successfully");
         })
-        .catch(err => {
-          console.error('Logout error:', err);
+        .catch((err) => {
+          console.error("Logout error:", err);
         })
         .finally(() => {
           store.logout();
-          this.$router.push('/');
+          this.$router.push("/");
         });
     },
     onAddRecipe() {
-      this.$emit('open-create-recipe');
-    }
-  }
-}
+      this.$emit("open-create-recipe");
+    },
+  },
+};
 </script>
 
 <style scoped>
+/* Import the common font for consistency */
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap");
+
+/* Navbar container */
 .recipe-navbar {
-  background-color: #A47551 !important;
+  background-color: #a47551 !important;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 0.75rem 0;
   min-height: 60px;
+  /* Set consistent font for entire navbar */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
 }
 
-/* Brand styling */
+/* Brand/Logo styling - using decorative font only for brand */
 .brand {
-  font-weight: bold;
-  font-size: 1.4rem;
+  font-weight: 700;
+  font-size: 1.5rem;
   color: white !important;
   display: flex;
   align-items: center;
-  font-family: 'Georgia', serif;
+  font-family: "Playfair Display", Georgia, serif;
+  letter-spacing: -0.5px;
+  text-decoration: none !important;
 }
 
 .brand:hover {
-  color: #f0f0f0 !important;
+  color: #f8f9fa !important;
   text-decoration: none;
 }
 
-/* Navigation items - FORCE WHITE COLOR */
-.navbar-nav .nav-link,
-.navbar-nav .nav-item .nav-link,
-.navbar-nav .nav-item a,
-.recipe-navbar .navbar-nav .nav-link,
-.recipe-navbar .navbar-dark .navbar-nav .nav-link,
-.navbar-dark .navbar-nav .nav-link {
-  color: white !important;
+/* Navigation links - consistent font with rest of app */
+.navbar-nav .nav-link {
+  color: rgba(255, 255, 255, 0.95) !important;
   font-weight: 500;
+  font-size: 0.95rem;
   padding: 0.5rem 1rem;
   margin: 0 0.25rem;
   border-radius: 4px;
   transition: all 0.3s ease;
-  font-family: 'Georgia', serif;
   text-decoration: none !important;
 }
 
-.navbar-dark .navbar-nav .nav-link:hover,
 .navbar-nav .nav-link:hover {
   color: white !important;
   background-color: rgba(255, 255, 255, 0.15) !important;
+  text-decoration: none !important;
 }
 
-.navbar-dark .navbar-nav .nav-link.router-link-exact-active,
 .navbar-nav .nav-link.router-link-exact-active {
   color: white !important;
   background-color: rgba(255, 255, 255, 0.2) !important;
 }
 
-/* Text styling */
+/* Text styling - consistent font */
 .guest-text,
 .welcome-text {
   color: rgba(255, 255, 255, 0.9);
   font-size: 0.95rem;
-  margin-right: 1.5rem !important;
-  font-family: 'Georgia', serif;
+  font-weight: 400;
+  margin-right: 1rem !important;
 }
 
 .welcome-text strong {
@@ -173,29 +207,32 @@ export default {
   font-weight: 600;
 }
 
-/* Buttons styling */
+/* Button styling */
 .action-btn {
   margin: 0 0.25rem;
   font-weight: 600;
+  font-size: 0.875rem;
   padding: 0.375rem 1rem;
   border-radius: 20px;
   transition: all 0.3s ease;
+  text-transform: none;
+  letter-spacing: 0;
 }
 
 .action-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .register-btn {
   background-color: white;
-  color: #A47551;
+  color: #a47551;
   border: none;
 }
 
 .register-btn:hover {
   background-color: #f8f9fa;
-  color: #8B6341;
+  color: #8b6341;
 }
 
 .new-recipe-btn {
@@ -213,21 +250,24 @@ export default {
   border-color: white;
 }
 
-/* Dropdown styling for Personal Area */
-::v-deep .dropdown-toggle {
+/* Dropdown styling */
+.personal-dropdown ::v-deep .dropdown-toggle {
   color: rgba(255, 255, 255, 0.95) !important;
   background-color: transparent !important;
   border: none !important;
   font-weight: 500;
+  font-size: 0.95rem;
   padding: 0.5rem 1rem;
+  border-radius: 4px;
+  transition: all 0.3s ease;
 }
 
-::v-deep .dropdown-toggle:hover {
+.personal-dropdown ::v-deep .dropdown-toggle:hover {
   background-color: rgba(255, 255, 255, 0.15) !important;
   color: white !important;
 }
 
-::v-deep .dropdown-toggle::after {
+.personal-dropdown ::v-deep .dropdown-toggle::after {
   margin-left: 0.5rem;
 }
 
@@ -237,6 +277,7 @@ export default {
   border: none;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   border-radius: 8px;
+  font-size: 0.95rem;
 }
 
 .dropdown-item {
@@ -244,25 +285,25 @@ export default {
   display: flex;
   align-items: center;
   transition: all 0.2s ease;
+  font-weight: 400;
 }
 
 .dropdown-item:hover {
   background-color: #f8f9fa;
-  color: #A47551;
+  color: #a47551;
 }
 
 .dropdown-item.router-link-exact-active {
-  background-color: #A47551;
+  background-color: #a47551;
   color: white;
 }
 
-/* Layout fixes - FORCE PROPER ALIGNMENT */
+/* Layout alignment */
 .d-flex.w-100.justify-content-between {
   align-items: center !important;
   min-height: 40px !important;
 }
 
-/* Force left nav to align properly */
 .navbar-nav {
   display: flex !important;
   align-items: center !important;
@@ -273,15 +314,25 @@ export default {
   margin-right: auto !important;
 }
 
-.navbar-nav:first-child .nav-link {
-  color: white !important;
-}
-
-/* Responsive design */
+/* Mobile/Tablet Responsive Design */
 @media (max-width: 991px) {
+  .recipe-navbar {
+    padding: 0.5rem 0;
+  }
+
+  .brand {
+    font-size: 1.25rem;
+  }
+
   .navbar-nav {
     padding: 1rem 0;
     width: 100%;
+  }
+
+  .navbar-nav .nav-link {
+    padding: 0.75rem 1rem;
+    margin: 0.25rem 0;
+    font-size: 1rem;
   }
 
   .d-flex.w-100 {
@@ -292,6 +343,7 @@ export default {
   .action-btn {
     width: 100%;
     margin: 0.25rem 0;
+    font-size: 0.95rem;
   }
 
   .guest-text,
@@ -299,20 +351,17 @@ export default {
     padding: 0.5rem 1rem;
     display: block;
     text-align: center;
-    color: white !important;
+    margin-right: 0 !important;
   }
 
-  /* Force all nav links to be white on mobile */
-  .recipe-navbar .navbar-nav .nav-link {
-    color: white !important;
-  }
-
-  ::v-deep .dropdown-menu {
+  /* Mobile dropdown styling */
+  .personal-dropdown ::v-deep .dropdown-menu {
     position: static !important;
     width: 100%;
     margin-top: 0.5rem;
     box-shadow: none;
     background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
   }
 
   .dropdown-item {
@@ -322,6 +371,21 @@ export default {
   .dropdown-item:hover {
     background-color: rgba(255, 255, 255, 0.1);
     color: white;
+  }
+
+  .dropdown-item.router-link-exact-active {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+  }
+}
+
+@media (max-width: 576px) {
+  .brand {
+    font-size: 1.1rem;
+  }
+
+  .navbar-nav .nav-link {
+    font-size: 0.95rem;
   }
 }
 </style>
