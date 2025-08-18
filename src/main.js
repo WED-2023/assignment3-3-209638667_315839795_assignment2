@@ -21,10 +21,15 @@ const router = createRouter({
   routes,
 });
 
+const state = {
+  // server_domain: "http://localhost:3000",
+  server_domain: "tom-may.cs.bgu.ac.il",
+};
+
 // Shared store
 const store = reactive({
   username: localStorage.getItem("username"),
-  server_domain: "http://localhost:3000",
+  server_domain: state.server_domain,
   login(username) {
     localStorage.setItem("username", username);
     this.username = username;
