@@ -1,15 +1,26 @@
 <template>
   <div class="container main-page">
-    <h1 class="page-title text-center mb-4">Granny's Recipes</h1>
-
     <b-row>
       <!-- Left Column - Random Recipes -->
       <b-col lg="6" class="mb-4">
         <div class="recipes-section">
-          <h2 class="section-title">
-            <b-icon icon="shuffle" class="mr-2"></b-icon>
-            Explore These Recipes
-          </h2>
+          <div
+            class="section-header d-flex justify-content-between align-items-center mb-3"
+          >
+            <h2 class="section-title mb-0">
+              <b-icon icon="shuffle" class="mr-2"></b-icon>
+              Explore These Recipes
+            </h2>
+            <b-button
+              variant="primary"
+              @click="loadRandomRecipes"
+              :disabled="loadingRandom"
+              class="refresh-button"
+            >
+              <b-icon icon="arrow-clockwise" class="mr-2"></b-icon>
+              Get New Recipes
+            </b-button>
+          </div>
 
           <div v-if="loadingRandom" class="text-center py-5">
             <b-spinner variant="primary"></b-spinner>
@@ -18,15 +29,12 @@
 
           <!-- Scrollable recipes container -->
           <div v-else class="recipes-scroll-container">
-            <RecipePreview v-for="recipe in randomRecipes" :key="recipe.id || recipe.recipe_id" :recipe="recipe"
-              class="mb-3" />
-          </div>
-
-          <div class="text-center mt-3">
-            <b-button variant="primary" @click="loadRandomRecipes" :disabled="loadingRandom" class="refresh-button">
-              <b-icon icon="arrow-clockwise" class="mr-2"></b-icon>
-              Get New Recipes
-            </b-button>
+            <RecipePreview
+              v-for="recipe in randomRecipes"
+              :key="recipe.id || recipe.recipe_id"
+              :recipe="recipe"
+              class="mb-3"
+            />
           </div>
         </div>
       </b-col>
@@ -36,26 +44,43 @@
         <div class="recipes-section">
           <!-- For Logged In Users -->
           <template v-if="store.isLoggedIn">
-            <h2 class="section-title">
-              <b-icon icon="clock-history" class="mr-2"></b-icon>
-              Last Watched Recipes
-            </h2>
+            <div
+              class="section-header d-flex justify-content-between align-items-center mb-3"
+            >
+              <h2 class="section-title mb-0">
+                <b-icon icon="clock-history" class="mr-2"></b-icon>
+                Last Watched Recipes
+              </h2>
+            </div>
 
             <div v-if="loadingLastViewed" class="text-center py-5">
               <b-spinner variant="primary"></b-spinner>
               <p class="mt-2">Loading your recent recipes...</p>
             </div>
 
-            <div v-else-if="lastViewedRecipes.length === 0" class="text-center py-5">
-              <b-icon icon="eye-slash" font-scale="3" class="text-muted mb-3"></b-icon>
+            <div
+              v-else-if="lastViewedRecipes.length === 0"
+              class="text-center py-5"
+            >
+              <b-icon
+                icon="eye-slash"
+                font-scale="3"
+                class="text-muted mb-3"
+              ></b-icon>
               <p class="text-muted">You haven't viewed any recipes yet.</p>
-              <p class="text-muted">Start exploring to see your history here!</p>
+              <p class="text-muted">
+                Start exploring to see your history here!
+              </p>
             </div>
 
             <!-- Scrollable last viewed recipes -->
             <div v-else class="recipes-scroll-container">
-              <RecipePreview v-for="recipe in lastViewedRecipes" :key="recipe.id || recipe.recipe_id" :recipe="recipe"
-                class="mb-3" />
+              <RecipePreview
+                v-for="recipe in lastViewedRecipes"
+                :key="recipe.id || recipe.recipe_id"
+                :recipe="recipe"
+                class="mb-3"
+              />
             </div>
           </template>
 
@@ -63,47 +88,80 @@
           <template v-else>
             <div class="login-section">
               <div class="text-center mb-4">
-                <b-icon icon="person-circle" font-scale="3" class="text-primary mb-3"></b-icon>
+                <b-icon
+                  icon="person-circle"
+                  font-scale="3"
+                  class="text-primary mb-3"
+                ></b-icon>
                 <h3>Welcome to Granny's Recipes!</h3>
                 <p class="text-muted">
-                  Login to see your recently viewed recipes and save your favorites
+                  Login to see your recently viewed recipes and save your
+                  favorites
                 </p>
               </div>
 
               <!-- Login Form -->
               <b-form @submit.prevent="handleLogin" class="login-form">
                 <!-- Error Alert -->
-                <b-alert v-if="loginError" variant="danger" dismissible @dismissed="loginError = ''" show>
+                <b-alert
+                  v-if="loginError"
+                  variant="danger"
+                  dismissible
+                  @dismissed="loginError = ''"
+                  show
+                >
                   {{ loginError }}
                 </b-alert>
 
                 <!-- Username Field -->
                 <b-form-group label="Username" label-for="username-input">
-                  <b-form-input id="username-input" v-model="loginForm.username" type="text"
-                    placeholder="Enter your username" required
-                    :state="loginForm.username.length > 0 ? true : null"></b-form-input>
+                  <b-form-input
+                    id="username-input"
+                    v-model="loginForm.username"
+                    type="text"
+                    placeholder="Enter your username"
+                    required
+                    :state="loginForm.username.length > 0 ? true : null"
+                  ></b-form-input>
                 </b-form-group>
 
                 <!-- Password Field -->
                 <b-form-group label="Password" label-for="password-input">
-                  <b-form-input id="password-input" v-model="loginForm.password" type="password"
-                    placeholder="Enter your password" required
-                    :state="loginForm.password.length > 0 ? true : null"></b-form-input>
+                  <b-form-input
+                    id="password-input"
+                    v-model="loginForm.password"
+                    type="password"
+                    placeholder="Enter your password"
+                    required
+                    :state="loginForm.password.length > 0 ? true : null"
+                  ></b-form-input>
                 </b-form-group>
 
                 <!-- Login Button -->
-                <b-button type="submit" variant="primary" block size="lg" :disabled="!isLoginFormValid || isLoggingIn"
-                  class="mb-3">
+                <b-button
+                  type="submit"
+                  variant="primary"
+                  block
+                  size="lg"
+                  :disabled="!isLoginFormValid || isLoggingIn"
+                  class="mb-3"
+                >
                   <b-spinner v-if="isLoggingIn" small class="mr-2"></b-spinner>
-                  <b-icon v-else icon="box-arrow-in-right" class="mr-2"></b-icon>
-                  {{ isLoggingIn ? 'Logging in...' : 'Login' }}
+                  <b-icon
+                    v-else
+                    icon="box-arrow-in-right"
+                    class="mr-2"
+                  ></b-icon>
+                  {{ isLoggingIn ? "Logging in..." : "Login" }}
                 </b-button>
 
                 <!-- Register Link -->
                 <div class="text-center">
                   <p class="text-muted">
                     Don't have an account?
-                    <b-link @click="$router.push('/register')">Register here</b-link>
+                    <b-link @click="$router.push('/register')"
+                      >Register here</b-link
+                    >
                   </p>
                 </div>
               </b-form>
@@ -117,13 +175,13 @@
 
 <script>
 import RecipePreview from "../components/RecipePreview.vue";
-import store from '../store';
-import axios from 'axios';
+import store from "../store";
+import axios from "axios";
 
 export default {
-  name: 'MainPage',
+  name: "MainPage",
   components: {
-    RecipePreview
+    RecipePreview,
   },
   data() {
     return {
@@ -132,11 +190,11 @@ export default {
       loadingRandom: false,
       loadingLastViewed: false,
       loginForm: {
-        username: '',
-        password: ''
+        username: "",
+        password: "",
       },
       isLoggingIn: false,
-      loginError: ''
+      loginError: "",
     };
   },
   computed: {
@@ -144,9 +202,10 @@ export default {
       return store;
     },
     isLoginFormValid() {
-      return this.loginForm.username.length > 0 &&
-        this.loginForm.password.length > 0;
-    }
+      return (
+        this.loginForm.username.length > 0 && this.loginForm.password.length > 0
+      );
+    },
   },
   mounted() {
     this.loadRandomRecipes();
@@ -155,29 +214,29 @@ export default {
     }
   },
   watch: {
-    'store.isLoggedIn'(newVal) {
+    "store.isLoggedIn"(newVal) {
       if (newVal) {
         this.loadLastViewedRecipes();
         // Clear login form
-        this.loginForm.username = '';
-        this.loginForm.password = '';
-        this.loginError = '';
+        this.loginForm.username = "";
+        this.loginForm.password = "";
+        this.loginError = "";
       } else {
         this.lastViewedRecipes = [];
       }
-    }
+    },
   },
   methods: {
     async handleLogin() {
       if (!this.isLoginFormValid) return;
 
       this.isLoggingIn = true;
-      this.loginError = '';
+      this.loginError = "";
 
       try {
-        const response = await axios.post('/login', {
+        const response = await axios.post("/login", {
           username: this.loginForm.username,
-          password: this.loginForm.password
+          password: this.loginForm.password,
         });
 
         if (response.status === 200) {
@@ -188,17 +247,17 @@ export default {
           this.loadLastViewedRecipes();
 
           // Show success message (optional)
-          console.log('Login successful!');
+          console.log("Login successful!");
         }
       } catch (error) {
-        console.error('Login error:', error);
+        console.error("Login error:", error);
 
         if (error.response?.status === 401) {
-          this.loginError = 'Invalid username or password';
+          this.loginError = "Invalid username or password";
         } else if (error.response?.data?.message) {
           this.loginError = error.response.data.message;
         } else {
-          this.loginError = 'An error occurred during login. Please try again.';
+          this.loginError = "An error occurred during login. Please try again.";
         }
       } finally {
         this.isLoggingIn = false;
@@ -208,10 +267,12 @@ export default {
     async loadRandomRecipes() {
       this.loadingRandom = true;
       try {
-        const response = await axios.get('/recipes/random');
-        this.randomRecipes = response.data.recipes.map(recipe => this.normalizeRecipe(recipe));
+        const response = await axios.get("/recipes/random");
+        this.randomRecipes = response.data.recipes.map((recipe) =>
+          this.normalizeRecipe(recipe)
+        );
       } catch (error) {
-        console.error('Error loading random recipes:', error);
+        console.error("Error loading random recipes:", error);
         this.randomRecipes = [];
       } finally {
         this.loadingRandom = false;
@@ -223,10 +284,12 @@ export default {
 
       this.loadingLastViewed = true;
       try {
-        const response = await axios.get('/users/last-viewed-recipes');
-        this.lastViewedRecipes = response.data.map(recipe => this.normalizeRecipe(recipe));
+        const response = await axios.get("/users/last-viewed-recipes");
+        this.lastViewedRecipes = response.data.map((recipe) =>
+          this.normalizeRecipe(recipe)
+        );
       } catch (error) {
-        console.error('Error loading last viewed recipes:', error);
+        console.error("Error loading last viewed recipes:", error);
         this.lastViewedRecipes = [];
       } finally {
         this.loadingLastViewed = false;
@@ -239,16 +302,20 @@ export default {
         recipe_id: recipe.recipe_id || recipe.id,
         title: recipe.title,
         image: recipe.image,
-        readyInMinutes: recipe.readyInMinutes || recipe.cook_time || recipe.cookTime,
+        readyInMinutes:
+          recipe.readyInMinutes || recipe.cook_time || recipe.cookTime,
         cook_time: recipe.cook_time || recipe.cookTime || recipe.readyInMinutes,
-        aggregateLikes: recipe.popularity || recipe.aggregateLikes || recipe.likes || 0,
+        aggregateLikes:
+          recipe.popularity || recipe.aggregateLikes || recipe.likes || 0,
         likes: recipe.likes || recipe.aggregateLikes || recipe.popularity || 0,
         vegan: recipe.vegan || recipe.is_vegan || recipe.isVegan,
-        vegetarian: recipe.vegetarian || recipe.is_vegetarian || recipe.isVegetarian,
-        glutenFree: recipe.glutenFree || recipe.is_gluten_free || recipe.isGlutenFree
+        vegetarian:
+          recipe.vegetarian || recipe.is_vegetarian || recipe.isVegetarian,
+        glutenFree:
+          recipe.glutenFree || recipe.is_gluten_free || recipe.isGlutenFree,
       };
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -259,10 +326,10 @@ export default {
 }
 
 .page-title {
-  color: #A47551;
+  color: #a47551;
   font-weight: bold;
   margin-bottom: 2rem;
-  font-family: 'Georgia', serif;
+  font-family: "Georgia", serif;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
@@ -271,7 +338,7 @@ export default {
   font-size: 1.5rem;
   margin-bottom: 1.5rem;
   padding-bottom: 0.5rem;
-  border-bottom: 2px solid #A47551;
+  border-bottom: 2px solid #a47551;
   display: flex;
   align-items: center;
 }
@@ -305,27 +372,54 @@ export default {
   }
 
   &::-webkit-scrollbar-thumb {
-    background: #A47551;
+    background: #a47551;
     border-radius: 10px;
 
     &:hover {
-      background: #8B6341;
+      background: #8b6341;
     }
   }
 }
 
 .refresh-button {
-  background-color: #A47551;
-  border-color: #A47551;
+  background-color: #a47551;
+  border-color: #a47551;
 
   &:hover:not(:disabled) {
-    background-color: #8B6341;
-    border-color: #8B6341;
+    background-color: #8b6341;
+    border-color: #8b6341;
   }
 
   &:disabled {
     opacity: 0.6;
   }
+}
+
+.section-header {
+  min-height: 52px; // Match the height of the header with button
+
+  .section-title {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .refresh-button {
+    white-space: nowrap;
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+  }
+}
+
+// Add bottom border to the header instead
+.section-header {
+  border-bottom: 2px solid #a47551;
+  padding-bottom: 0.5rem;
+}
+
+// Add bottom border to the header instead
+.section-header {
+  border-bottom: 2px solid #a47551;
+  padding-bottom: 0.5rem;
 }
 
 .login-section {
@@ -352,14 +446,14 @@ export default {
   }
 
   .btn-primary {
-    background-color: #A47551;
-    border-color: #A47551;
+    background-color: #a47551;
+    border-color: #a47551;
     font-weight: 600;
     letter-spacing: 0.5px;
 
     &:hover:not(:disabled) {
-      background-color: #8B6341;
-      border-color: #8B6341;
+      background-color: #8b6341;
+      border-color: #8b6341;
     }
 
     &:disabled {
@@ -374,7 +468,7 @@ export default {
     padding: 0.75rem;
 
     &:focus {
-      border-color: #A47551;
+      border-color: #a47551;
       box-shadow: 0 0 0 0.2rem rgba(164, 117, 81, 0.25);
     }
   }

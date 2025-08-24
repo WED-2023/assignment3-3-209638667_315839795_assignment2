@@ -1,6 +1,6 @@
 import Main from "../pages/MainPage.vue";
 import NotFound from "../pages/NotFoundPage.vue";
-import About from "../pages/AboutPage";
+import About from "../pages/AboutPage.vue";
 
 const routes = [
   {
@@ -11,7 +11,7 @@ const routes = [
   {
     path: "/about",
     name: "about",
-    component: About
+    component: About,
   },
   {
     path: "/register",
@@ -32,29 +32,37 @@ const routes = [
     path: "/recipe/:recipeId",
     name: "recipe",
     component: () => import("../pages/RecipeViewPage.vue"),
+    beforeEnter: (to, from, next) => {
+      // Validate that recipeId is numeric if needed
+      if (to.params.recipeId && isNaN(to.params.recipeId)) {
+        next({ name: "notFound" });
+      } else {
+        next();
+      }
+    },
   },
   {
     path: "/favorites",
     name: "favorites",
-    component: () => import("../pages/MyFavorites.vue")
+    component: () => import("../pages/MyFavorites.vue"),
   },
   {
     path: "/my-recipes",
     name: "my-recipes",
     component: () => import("../pages/MyRecipes.vue"),
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true },
   },
   {
     path: "/family-recipes",
     name: "family-recipes",
     component: () => import("../pages/FamilyRecipes.vue"),
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true },
   },
   {
     path: "/:catchAll(.*)",
     name: "notFound",
     component: NotFound,
-  }
+  },
 ];
 
 export default routes;

@@ -38,7 +38,7 @@
     <div v-else>
       <!-- Action buttons and stats -->
       <b-row class="mb-4 align-items-center">
-        <b-col md="8">
+        <b-col md="12">
           <div class="stats-container">
             <div class="stats-bar">
               <div class="stat-item">
@@ -65,15 +65,6 @@
             </div>
           </div>
         </b-col>
-        <b-col md="4" class="d-flex align-items-center justify-content-center">
-          <b-button
-            variant="success"
-            @click="$refs.createModal.open()"
-            class="create-btn"
-          >
-            <b-icon icon="plus-circle" class="mr-2" /> Create New Recipe
-          </b-button>
-        </b-col>
       </b-row>
 
       <!-- No recipes state -->
@@ -87,13 +78,6 @@
         <p class="text-muted">
           Start sharing your culinary creativity with the world!
         </p>
-        <b-button
-          variant="success"
-          @click="$refs.createModal.open()"
-          class="mt-3"
-        >
-          <b-icon icon="plus-circle" class="mr-2" /> Create Your First Recipe
-        </b-button>
       </div>
 
       <!-- Recipes grid -->
@@ -665,25 +649,6 @@ export default {
   border-radius: 4px;
 }
 
-/* Create Button */
-.create-btn {
-  background-color: #28a745;
-  border-color: #28a745;
-  font-weight: 600;
-  border-radius: 8px;
-  padding: 0.6rem 1.2rem;
-  border-width: 2px;
-  transition: all 0.3s ease;
-  font-size: 0.9rem;
-
-  &:hover {
-    background-color: #218838;
-    border-color: #1e7e34;
-    transform: translateY(-1px);
-    box-shadow: 0 3px 6px rgba(40, 167, 69, 0.25);
-  }
-}
-
 .recipe-wrapper {
   position: relative;
 }
@@ -704,11 +669,6 @@ export default {
 
   .controls-section {
     padding: 1rem;
-  }
-
-  .create-btn {
-    width: 100%;
-    margin-top: 1rem;
   }
 
   .filter-buttons {

@@ -12,14 +12,25 @@
 
         <!-- Action Buttons -->
         <div class="recipe-actions">
-          <b-button @click="toggleFavorite" :variant="isFavorite ? 'warning' : 'outline-warning'" class="action-btn"
-            v-b-tooltip.hover :title="isFavorite ? 'Remove from favorites' : 'Add to favorites'">
+          <b-button
+            @click="toggleFavorite"
+            :variant="isFavorite ? 'warning' : 'outline-warning'"
+            class="action-btn"
+            v-b-tooltip.hover
+            :title="isFavorite ? 'Remove from favorites' : 'Add to favorites'"
+          >
             <b-icon :icon="isFavorite ? 'star-fill' : 'star'"></b-icon>
-            {{ isFavorite ? 'Favorited' : 'Favorite' }}
+            {{ isFavorite ? "Favorited" : "Favorite" }}
           </b-button>
 
-          <b-button @click="likeRecipe" :variant="isLiked ? 'danger' : 'outline-danger'" class="action-btn"
-            :disabled="!isLoggedIn" v-b-tooltip.hover :title="!isLoggedIn ? 'Login to like' : 'Like this recipe'">
+          <b-button
+            @click="likeRecipe"
+            :variant="isLiked ? 'danger' : 'outline-danger'"
+            class="action-btn"
+            :disabled="!isLoggedIn"
+            v-b-tooltip.hover
+            :title="!isLoggedIn ? 'Login to like' : 'Like this recipe'"
+          >
             <b-icon :icon="isLiked ? 'heart-fill' : 'heart'"></b-icon>
             {{ recipe.aggregateLikes || 0 }}
           </b-button>
@@ -31,7 +42,24 @@
         <!-- Left Side - Image and Quick Info -->
         <div class="recipe-left">
           <div class="image-wrapper">
-            <img :src="recipe.image" :alt="recipe.title" class="recipe-image" />
+            <!-- Updated image section with fallback -->
+            <div class="recipe-image-container">
+              <img
+                v-if="
+                  recipe.image &&
+                  recipe.image !==
+                    'https://via.placeholder.com/300x200?text=No+Image' &&
+                  !isImageMissing
+                "
+                :src="recipe.image"
+                :alt="recipe.title"
+                class="recipe-image"
+                @error="handleImageError"
+              />
+              <div v-else class="no-image-placeholder">
+                <span>🍽️</span>
+              </div>
+            </div>
 
             <!-- Quick Info Badges -->
             <div class="quick-info">
@@ -45,17 +73,29 @@
                 Vegan
               </b-badge>
 
-              <b-badge variant="success" class="info-badge" v-if="recipe.vegetarian">
+              <b-badge
+                variant="success"
+                class="info-badge"
+                v-if="recipe.vegetarian"
+              >
                 <b-icon icon="leaf"></b-icon>
                 Vegetarian
               </b-badge>
 
-              <b-badge variant="warning" class="info-badge" v-if="recipe.glutenFree">
+              <b-badge
+                variant="warning"
+                class="info-badge"
+                v-if="recipe.glutenFree"
+              >
                 <b-icon icon="exclamation-triangle"></b-icon>
                 Gluten Free
               </b-badge>
 
-              <b-badge variant="secondary" class="info-badge" v-if="recipe.servings">
+              <b-badge
+                variant="secondary"
+                class="info-badge"
+                v-if="recipe.servings"
+              >
                 <b-icon icon="people"></b-icon>
                 {{ recipe.servings }} servings
               </b-badge>
@@ -74,8 +114,15 @@
                   What You'll Need
                 </h3>
                 <ul class="ingredients-list">
-                  <li v-for="(ingredient, index) in recipe.extendedIngredients" :key="index" class="ingredient-item">
-                    <b-icon icon="check-circle" class="ingredient-icon"></b-icon>
+                  <li
+                    v-for="(ingredient, index) in recipe.extendedIngredients"
+                    :key="index"
+                    class="ingredient-item"
+                  >
+                    <b-icon
+                      icon="check-circle"
+                      class="ingredient-icon"
+                    ></b-icon>
                     {{ ingredient.original }}
                   </li>
                 </ul>
@@ -90,7 +137,11 @@
                   How to Make It
                 </h3>
                 <ol class="instructions-list">
-                  <li v-for="step in recipe._instructions" :key="step.number" class="instruction-step">
+                  <li
+                    v-for="step in recipe._instructions"
+                    :key="step.number"
+                    class="instruction-step"
+                  >
                     {{ step.step }}
                   </li>
                 </ol>
@@ -113,7 +164,11 @@
 
       <!-- Bottom Action Bar -->
       <div class="bottom-actions">
-        <b-button variant="outline-secondary" @click="$router.push('/')" class="back-btn">
+        <b-button
+          variant="outline-secondary"
+          @click="$router.push('/')"
+          class="back-btn"
+        >
           <b-icon icon="arrow-left"></b-icon>
           Back to Recipes
         </b-button>
@@ -134,19 +189,20 @@
 
 <script>
 export default {
-  name: 'RecipeViewPage',
+  name: "RecipeViewPage",
   data() {
     return {
       recipe: null,
       loading: true,
       isFavorite: false,
-      isLiked: false
+      isLiked: false,
+      isImageMissing: false, // Added to track image loading errors
     };
   },
   computed: {
     isLoggedIn() {
       return this.$root.store.username !== undefined;
-    }
+    },
   },
   async created() {
     await this.loadRecipe();
@@ -157,12 +213,10 @@ export default {
         this.loading = true;
         const recipeId = this.$route.params.recipeId;
 
-        const response = await this.axios.get(
-          `${this.$root.store.server_domain}/recipes/${recipeId}`
-        );
+        const response = await this.axios.get(`/recipes/${recipeId}`);
 
         if (response.status !== 200) {
-          this.$router.replace("/NotFound");
+          this.$router.replace("/notFound");
           return;
         }
 
@@ -182,7 +236,7 @@ export default {
           glutenFree,
           servings,
           summary,
-          isFavorite
+          isFavorite,
         } = data;
 
         // Process instructions
@@ -203,10 +257,10 @@ export default {
           // Fallback to simple instructions
           _instructions = instructions
             .split(/[.\n]/)
-            .filter(step => step.trim())
+            .filter((step) => step.trim())
             .map((step, index) => ({
               number: index + 1,
-              step: step.trim()
+              step: step.trim(),
             }));
         }
 
@@ -223,23 +277,28 @@ export default {
           instructions,
           _instructions,
           analyzedInstructions,
-          extendedIngredients: extendedIngredients || []
+          extendedIngredients: extendedIngredients || [],
         };
 
         this.isFavorite = isFavorite || false;
         this.isLiked = false; // You can track this separately if needed
-
+        this.isImageMissing = false; // Reset image error state
       } catch (error) {
         console.error("Error loading recipe:", error);
-        this.$router.replace("/NotFound");
+        this.$router.replace("/notFound");
       } finally {
         this.loading = false;
       }
     },
 
+    // Added method to handle image errors
+    handleImageError() {
+      this.isImageMissing = true;
+    },
+
     async toggleFavorite() {
       if (!this.isLoggedIn) {
-        alert('Please login to add favorites');
+        alert("Please login to add favorites");
         return;
       }
 
@@ -249,26 +308,26 @@ export default {
         if (this.isFavorite) {
           await this.axios.delete(`/users/favorites/${recipeId}`);
           this.isFavorite = false;
-          console.log('Removed from favorites');
+          console.log("Removed from favorites");
         } else {
-          await this.axios.post('/users/favorites', { recipeId });
+          await this.axios.post("/users/favorites", { recipeId });
           this.isFavorite = true;
-          console.log('Added to favorites!');
+          console.log("Added to favorites!");
         }
       } catch (error) {
-        console.error('Error toggling favorite:', error);
+        console.error("Error toggling favorite:", error);
         if (error.response && error.response.status === 409) {
           // Already in favorites, just update the UI
           this.isFavorite = true;
         } else {
-          alert('Failed to update favorites');
+          alert("Failed to update favorites");
         }
       }
     },
 
     async likeRecipe() {
       if (!this.isLoggedIn) {
-        alert('Please login to like recipes');
+        alert("Please login to like recipes");
         return;
       }
 
@@ -282,7 +341,10 @@ export default {
         if (this.isLiked) {
           this.recipe.aggregateLikes = (this.recipe.aggregateLikes || 0) + 1;
         } else {
-          this.recipe.aggregateLikes = Math.max(0, (this.recipe.aggregateLikes || 0) - 1);
+          this.recipe.aggregateLikes = Math.max(
+            0,
+            (this.recipe.aggregateLikes || 0) - 1
+          );
         }
 
         // Update likes in database if it's a local recipe
@@ -290,24 +352,26 @@ export default {
         if (recipeId < 10000) {
           // It's likely a local recipe, update the database
           await this.axios.put(`/recipes/${recipeId}/like`, {
-            likes: this.recipe.aggregateLikes
+            likes: this.recipe.aggregateLikes,
           });
         }
         // For Spoonacular recipes, we just update the UI
         // You might want to track user likes separately in a user_likes table
-
       } catch (error) {
-        console.error('Error updating likes:', error);
+        console.error("Error updating likes:", error);
         // Revert the UI change if the update failed
         this.isLiked = !this.isLiked;
         if (this.isLiked) {
           this.recipe.aggregateLikes = (this.recipe.aggregateLikes || 0) + 1;
         } else {
-          this.recipe.aggregateLikes = Math.max(0, (this.recipe.aggregateLikes || 0) - 1);
+          this.recipe.aggregateLikes = Math.max(
+            0,
+            (this.recipe.aggregateLikes || 0) - 1
+          );
         }
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -367,11 +431,10 @@ export default {
 
 .recipe-main {
   display: grid;
-  grid-template-columns: 400px 1fr;
+  grid-template-columns: 350px 1fr;
   gap: 2rem;
   padding: 1.5rem;
-  max-height: calc(100vh - 350px);
-  overflow: hidden;
+  min-height: 500px;
 }
 
 .recipe-left {
@@ -383,12 +446,34 @@ export default {
   position: relative;
 }
 
-.recipe-image {
+/* Updated image container styles to match RecipePreview */
+.recipe-image-container {
   width: 100%;
   height: 300px;
-  object-fit: cover;
+  overflow: hidden;
+  background: #faf8f3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 10px;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+.recipe-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.no-image-placeholder {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f5e6d3 0%, #e8dfd6 100%);
+  font-size: 6rem;
+  border-radius: 10px;
 }
 
 .quick-info {
@@ -413,15 +498,15 @@ export default {
 }
 
 .recipe-tabs-content {
-  max-height: calc(100vh - 450px);
-  overflow-y: auto;
   padding: 1rem;
+  min-height: 400px;
 }
 
 .section-title {
   font-size: 1.3rem;
   color: #333;
   margin-bottom: 1.5rem;
+  margin-top: 1rem;
   padding-bottom: 0.5rem;
   border-bottom: 1px solid #dee2e6;
   display: flex;
@@ -440,6 +525,8 @@ export default {
   align-items: flex-start;
   gap: 0.5rem;
   border-bottom: 1px solid #f0f0f0;
+  word-wrap: break-word;
+  line-height: 1.5;
 }
 
 .ingredient-icon {
@@ -501,11 +588,11 @@ export default {
 @media (max-width: 992px) {
   .recipe-main {
     grid-template-columns: 1fr;
-    max-height: none;
+    gap: 1.5rem;
   }
 
-  .recipe-image {
-    height: 250px;
+  .recipe-image-container {
+    height: 200px;
   }
 
   .recipe-tabs-content {

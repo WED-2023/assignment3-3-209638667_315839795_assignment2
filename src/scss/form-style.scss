@@ -1,0 +1,165 @@
+// /* --- Granny's Recipes - Main Stylesheet --- */
+
+// // 1. FONT IMPORT
+// @import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@400;700&display=swap");
+
+// // 2. DESIGN VARIABLES
+// // A warmer, more nostalgic color palette
+// $color-parchment: #fdfaf6; // Soft, creamy background
+// $color-warm-brown: #8b6b59; // Primary color, like aged wood or spices
+// $color-dark-brown: #6c4a3a; // For hover effects and darker elements
+// $color-text-primary: #3d3731; // A very dark, warm brown instead of black
+// $color-text-secondary: #7a736d; // A softer text color for details
+// $color-accent-green: #6a8a82; // Muted green for success/add buttons
+// $color-accent-red: #c77d7d; // Softer red for errors
+// $color-border: #eae2d8; // A gentle border color
+
+// // Font families
+// $font-family-heading: "Playfair Display", Georgia, serif;
+// $font-family-body: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+//   sans-serif;
+
+// // Other variables
+// $border-radius: 6px;
+// $card-shadow: 0 4px 15px rgba($color-dark-brown, 0.08);
+// $card-shadow-hover: 0 6px 25px rgba($color-dark-brown, 0.12);
+
+// // 3. CSS RESET & GLOBAL STYLES
+// * {
+//   margin: 0;
+//   padding: 0;
+//   box-sizing: border-box;
+// }
+
+// body {
+//   background-color: $color-parchment;
+//   color: $color-text-primary;
+//   font-family: $font-family-body;
+//   -webkit-font-smoothing: antialiased;
+//   -moz-osx-font-smoothing: grayscale;
+//   line-height: 1.6;
+// }
+
+// #app {
+//   min-height: 100vh;
+// }
+
+// // 4. TYPOGRAPHY
+// h1,
+// h2,
+// h3,
+// h4,
+// h5,
+// h6 {
+//   font-family: $font-family-heading;
+//   font-weight: 700;
+//   line-height: 1.2;
+//   margin-bottom: 1rem;
+//   color: $color-dark-brown;
+// }
+
+// h1 {
+//   font-size: 2.5rem;
+// }
+// h2 {
+//   font-size: 2rem;
+// }
+// h3 {
+//   font-size: 1.75rem;
+// }
+
+// p {
+//   margin-bottom: 1rem;
+//   color: $color-text-primary;
+// }
+
+// a {
+//   color: $color-warm-brown;
+//   text-decoration: none;
+//   transition: color 0.3s ease;
+
+//   &:hover {
+//     color: $color-dark-brown;
+//     text-decoration: underline;
+//   }
+// }
+
+// // 5. SHARED COMPONENT STYLES
+// .card {
+//   border: 1px solid $color-border;
+//   box-shadow: $card-shadow;
+//   border-radius: $border-radius;
+//   transition: transform 0.3s ease, box-shadow 0.3s ease;
+//   background-color: #fff;
+
+//   &:hover {
+//     transform: translateY(-4px);
+//     box-shadow: $card-shadow-hover;
+//   }
+// }
+
+// .btn {
+//   border-radius: $border-radius;
+//   font-weight: 700;
+//   padding: 0.6rem 1.2rem;
+//   transition: all 0.3s ease;
+//   border: 1px solid transparent;
+
+//   &:focus {
+//     box-shadow: 0 0 0 0.2rem rgba($color-warm-brown, 0.25);
+//   }
+// }
+
+// .btn-primary {
+//   background-color: $color-warm-brown;
+//   border-color: $color-warm-brown;
+//   color: #fff;
+
+//   &:hover {
+//     background-color: $color-dark-brown;
+//     border-color: $color-dark-brown;
+//     color: #fff;
+//   }
+// }
+
+// .btn-success {
+//   background-color: $color-accent-green;
+//   border-color: $color-accent-green;
+//   color: #fff;
+
+//   &:hover {
+//     background-color: darken($color-accent-green, 8%);
+//     border-color: darken($color-accent-green, 8%);
+//     color: #fff;
+//   }
+// }
+
+// .form-control,
+// .form-select {
+//   border: 1px solid $color-border;
+//   border-radius: $border-radius;
+//   &:focus {
+//     border-color: $color-warm-brown;
+//     box-shadow: 0 0 0 0.2rem rgba($color-warm-brown, 0.25);
+//   }
+// }
+
+// // Modal customization
+// .modal-content {
+//   border: 1px solid $color-border;
+//   border-radius: $border-radius;
+//   box-shadow: $card-shadow;
+// }
+
+// .modal-header {
+//   border-bottom: 1px solid $color-border;
+// }
+
+// .modal-footer {
+//   border-top: 1px solid $color-border;
+// }
+
+// .modal-title {
+//   font-family: $font-family-heading;
+//   color: $color-dark-brown;
+// }
